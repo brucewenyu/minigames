@@ -1,6 +1,6 @@
 #pragma once
-#ifndef BOX_MAN_S_
-#define BOX_MAN_S_
+#ifndef BOX_MAN_H_
+#define BOX_MAN_H_
 
 #define RATIO 66
 #define SCREEN_WIDTH 960
@@ -56,4 +56,4 @@ void getcontrol(DIRECTION direct);
 void changemap(POS* pos, PROPS prop);
 bool isgameover();
 void gameover();
-#endif // !BOX_MAN_S_
+#endif // !BOX_MAN_H_
