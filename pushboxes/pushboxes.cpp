@@ -7,54 +7,9 @@
 
 using namespace std;
 
-#define RATIO 66
-#define SCREEN_WIDTH 960
-#define SCREEN_HEIGHT 768
-#define START_X 88
-#define START_Y 100
-#define ROWS 9
-#define COLUMNS 12
-
-#define KEY_UP    'w'
-
-#define KEY_LEFT  'a'
-#define KEY_RIGHT 'd'
-#define KEY_DOWN  's'
-#define KEY_QUIT  'q'
-
-#define KEY_NORTH  72
-#define KEY_SOUTH  80
-#define KEY_EAST  77
-#define KEY_WEST  75
-
-
 #define VALIDCONDITION(pos) (pos.x >= 0 && pos.x < ROWS) && (pos.y >= 0 && pos.y < COLUMNS)
 
-enum _PROPS {
-	WALL,
-	FLOOR,
-	BOX_DES,
-	MAN,
-	BOX,
-	HIT,
-	ALL
-};
-
-enum _DIRECTION
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
-
-struct _POS {
-	int x;
-	int y;
-};
-
 struct _POS man;
-
 
 IMAGE images[ALL];
 
@@ -126,14 +81,22 @@ void movesteps() {
 			else if (ch == KEY_QUIT) {
 				quit = true;
 			}
+
+			if (isgameover()) {
+				quit = true;
+				gameover();
+				system("pause");
+			}
 		}
+
+
 		Sleep(100);
 	} while (quit == false);
 }
 
-void getcontrol(enum _DIRECTION direct) {
-	struct _POS next_pos = man;
-	struct _POS next_next_pos = man;
+void getcontrol(DIRECTION direct) {
+	POS next_pos = man;
+	POS next_next_pos = man;
 	switch (direct)
 	{
 	case UP:
@@ -175,11 +138,26 @@ void getcontrol(enum _DIRECTION direct) {
 			man = next_pos;
 		}
 	}
-
-
 }
 
-void changemap(struct _POS* pos, enum  _PROPS prop) { //(int line, int column, enum _PROPS prop) {
+void changemap(POS* pos, PROPS prop) {
 	map[pos->x][pos->y] = prop;
 	putimage(START_X + pos->y * RATIO, START_Y + pos->x * RATIO, &images[prop]);
+}
+
+bool isgameover() {
+	for (int i = 0; i < ROWS; i++) {
+		for (int j = 0; j < COLUMNS; j++) {
+			if (map[i][j] == BOX_DES) return false;
+		}
+	}
+
+	return true;
+}
+
+void gameover() {
+	settextcolor(WHITE);
+	RECT rec = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	settextstyle(20, 0, _T("ËÎÌå"));
+	drawtext(_T("¹§Ï²ÄúÍ¨¹Ø£¡£¡£¡"), &rec, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
